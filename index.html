@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <button id="dl">Download PNG</button>
+    <script>
+      function openPNGBlob (blob) {
+        var activity = new MozActivity({
+          name: 'open',
+          data: {
+            type: 'image/png',
+            blob: blob,
+          },
+        });
+      };
+
+      function write (deviceStorage, blob, filename) {
+        var request = deviceStorage.get(filename);
+        request.onsuccess = function () {
+          alert('file already exists!!!');
+        };
+        request.onerror = function () {
+          var request = deviceStorage.addNamed(blob, filename);
+          request.onsuccess = function () {
+            alert('wrote ' + this.result);
+            openPNGBlob(blob);
+          };
+          request.onerror = function () {
+            alert('error writing: ' + this.error.name);
+          };
+        };
+      };
+
+      function writeImage (xhr, filename) {
+        var blob = xhr.response;
+        alert(blob.type);
+        // if we didn't override the MIME type earlier, we could also do:
+        //var blob = new Blob([xhr.response], { type: 'image/png' });
+        var deviceStorage = navigator.getDeviceStorage('pictures');
+        write(deviceStorage, blob, filename);
+      };
+
+      function systemXHRGet (url, cb) {
+        var xhr = new XMLHttpRequest({ mozSystem: true });
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        // needed because xhr to packaged app file MIME type is application/xml
+        xhr.overrideMimeType('image/png');
+        xhr.onload = cb.bind(null, xhr, 'img.png');
+        xhr.send();
+      };
+
+      document.getElementById('dl')
+              .addEventListener('click',
+                systemXHRGet.bind(null, 'img.png', writeImage));
+    </script>
+  </body>
+</html>
+

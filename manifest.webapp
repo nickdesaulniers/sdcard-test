@@ -1,0 +1,15 @@
+{
+  "name": "sdcard test",
+  "description": "write to the sd card",
+  "type": "privileged",
+  "launch_path": "index.html",
+  "permissions": {
+    "device-storage:pictures": {
+      "access": "readwrite"
+    },
+    "systemXHR": {
+      "description": "Needed for fetching assest cross origin; packaged app"
+    }
+  }
+}
+
