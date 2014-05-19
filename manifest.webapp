@@ -4,12 +4,10 @@
   "type": "privileged",
   "launch_path": "index.html",
   "permissions": {
-    "device-storage:pictures": {
+    "device-storage:sdcard": {
       "access": "readwrite"
-    },
-    "systemXHR": {
-      "description": "Needed for fetching assest cross origin; packaged app"
     }
-  }
+  },
+  "launch_path": "/index.html"
 }
 
